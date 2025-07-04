@@ -1,10 +1,12 @@
 ---
 layout: post
 title: 'How Much Faster? Real-World Timings When Raising SQL Server Database Compatibility Levels'
-date: 2025-07-03 15:46:33 +1000
+date: 2025-07-03 21:52:30 +1000
 categories: SQL Compatibility
 tags: SQL Server, Performance, Compatibility Level
 ---
+
+<img src="/assets/images/sql-compatibility/title.png" alt="My Blog Title" style="display:block; margin:0 auto; max-width:100%;" />
 
 Upgrading your SQL Server’s database compatibility level is one of the easiest ways to get the latest performance benefits — **without changing a single line of application code**. But what actual improvements can you expect when raising a database’s compatibility level from SQL Server 2014 (level 120) up through 2016, 2017, 2019, and 2022? Are there measurable performance wins, and do you need to be careful? Let’s dive in with worked examples and lessons learned.
 
