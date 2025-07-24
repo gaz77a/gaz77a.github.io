@@ -1,18 +1,24 @@
 ---
 layout: post
-title: Enforcing Tenant-Level Security with SQL Server's CREATE SECURITY POLICY
+title: "🔒 Enforcing Tenant-Level Security with SQL Server's CREATE SECURITY POLICY 🔒"
 image: /assets/images/tenant-level-security/title.png
 date: 2025-06-26 20:46:33 +1000
 categories: Tenant-Level Security
 tags: SQL Server, Security, Multi-Tenant Applications
 ---
 
-<img src="/assets/images/tenant-level-security/title.png" alt="My Blog Title" style="display:block; margin:0 auto; max-width:100%;" />
+![Title image](/assets/images/tenant-level-security/title.png)
+
+> By Gary Butler | 5 min read
+
+<br><br>
+
+## 🚩 Introduction
 
 Tenant-level security is critical for multi-tenant applications where a single instance of the application serves multiple tenants. Ensuring that a tenant's data is isolated and inaccessible to other tenants is paramount. SQL Server's `Row-level Security` (RLS) feature; introduced in SQL 2016 and accessed via the `CREATE SECURITY POLICY` statement; provides a robust and efficient way to enforce such data isolation.
 In this blog, I will walk through the process of implementing tenant-level security using the `CREATE SECURITY POLICY` feature in SQL Server, from setting up your database and defining security functions to observing the behavior in execution plans.
 
-## Table of Contents
+## 📑 Table of Contents
 
 -   [Example of the Problem](#example-of-the-problem)
     -   [Initial Table Setup](#initial-table-setup)
@@ -29,11 +35,11 @@ In this blog, I will walk through the process of implementing tenant-level secur
 -   [Conclusion](#conclusion)
 -   [STILL TO COME:](#still-to-come)
 
-## Example of the Problem
+## 🧩 Example of the Problem
 
 Imagine we have a multi-tenant application that stores data for multiple tenants in a single table without row-level security. Tenants should only see their own data, but without proper security measures, they could potentially query and access data from other tenants.
 
-### Initial Table Setup
+### 🏗️ Initial Table Setup
 
 Here’s a setup for a simple table without any security policies:
 
@@ -51,7 +57,7 @@ VALUES  (1, 1, 'Data for Tenant 1'),
         (4, 2, 'More Data for Tenant 2');
 ```
 
-### Unrestricted Query Access
+### 🔓 Unrestricted Query Access
 
 Without row-level security in place, any tenant can execute the following query and access all the data, regardless of tenant boundaries:
 
@@ -59,7 +65,7 @@ Without row-level security in place, any tenant can execute the following query 
 SELECT * FROM dbo.SomeMultiTenantedTable;
 ```
 
-#### Result:
+#### 📈 Result:
 
 | Id  | TenantId | SomeData               |
 | --- | -------- | ---------------------- |
@@ -71,9 +77,9 @@ SELECT * FROM dbo.SomeMultiTenantedTable;
 This poses a serious security risk as Tenant 1 can see data belonging to Tenant 2 and vice versa.
 This is also an issue if the application has a bug which excludes the Tenant from a CRUD query.
 
-## Step-by-Step Guide to Enforcing Tenant-Level Security
+## 👣 Step-by-Step Guide to Enforcing Tenant-Level Security
 
-### 1. Setting Session Context for Tenant Identification
+### 1️⃣ Setting Session Context for Tenant Identification
 
 To ensure each session identifies which tenant it belongs to, SQL Server's session context feature can be used. This allows you to set a case-sensitive key-value pair that will be used in the security predicate.
 
@@ -81,7 +87,7 @@ To ensure each session identifies which tenant it belongs to, SQL Server's sessi
 EXEC sp_set_session_context @key = N'TenantId', @value = '1';
 ```
 
-### 2. Creating the Security Predicate Function
+### 2️⃣ Creating the Security Predicate Function
 
 The next step is to create a security predicate function. This function will use the `SESSION_CONTEXT` to filter rows based on the tenant's ID.
 
@@ -97,7 +103,7 @@ RETURN
 
 This function checks if the `TenantId` of the row matches the `TenantId` set in the session context.
 
-### 3. Applying the Security Policy to Data Retrieval
+### 3️⃣ Applying the Security Policy to Data Retrieval
 
 With the predicate function in place, you can now create a security policy that applies this function to `SomeMultiTenantedTable`.
 
@@ -109,39 +115,39 @@ WITH (STATE = ON);
 
 This policy will enforce row-level security to select queries based on the tenant ID stored in the session context.
 
-### 4. Testing the Implementation
+### 4️⃣ Testing the Implementation
 
 To test if tenant-level security is correctly enforced, set different `TenantId` values in the session context and observe the results:
 
-#### Set Session Context to Tenant 1:
+#### 🎛️ Set Session Context to Tenant 1:
 
 ```sql
 EXEC sp_set_session_context @key = N'TenantId', @value = '1';
 SELECT * FROM dbo.SomeMultiTenantedTable;
 ```
 
-#### Result:
+#### 📈 Result:
 
 | Id  | TenantId | SomeData               |
 | --- | -------- | ---------------------- |
 | 1   | 1        | Data for Tenant 1      |
 | 3   | 1        | More Data for Tenant 1 |
 
-#### Set Session Context to Tenant 2:
+#### 🎛️ Set Session Context to Tenant 2:
 
 ```sql
 EXEC sp*set_session_context @key = N'TenantId', @value = '2';
 SELECT * FROM dbo.SomeMultiTenantedTable;
 ```
 
-#### Result:
+#### 📈 Result:
 
 | Id  | TenantId | SomeData               |
 | --- | -------- | ---------------------- |
 | 2   | 2        | Data for Tenant 2      |
 | 4   | 2        | More Data for Tenant 2 |
 
-### 5. Observing the Impact in Execution Plans
+### 5️⃣ Observing the Impact in Execution Plans
 
 To see how the security policy affects query plans, enable the actual execution plan in SQL Server Management Studio (SSMS) and execute the query `SELECT \* FROM dbo.SomeMultiTenantedTable;`
 
@@ -161,7 +167,7 @@ _1 million rows queried_<br><br>
 
 _Predicate includes the RLS_<br><br>
 
-### 6. Blocking Updates, Inserts, and Deletes
+### 6️⃣ Blocking Updates, Inserts, and Deletes
 
 In addition to filtering query results, you may also want to prevent tenants from inserting, updating, or deleting data that does not belong to them. This can be achieved using block predicates in your security policy.
 
@@ -172,17 +178,17 @@ ADD BLOCK PREDICATE dbo.fn_securityPredicate(TenantId) ON dbo.SomeMultiTenantedT
 
 This policy will enforce row-level security based on the tenant ID stored in the session context.
 
-### 7. Testing the Implementation
+### 7️⃣ Testing the Implementation
 
 To test if block predicate is correctly applied, attempt to perform insert, update, and delete operations with different `TenantId` values set in the session context:
 
-#### Set Session Context to Tenant 1:
+#### 🎛️ Set Session Context to Tenant 1:
 
 ```sql
 EXEC sp_set_session_context @key = N'TenantId', @value = '1';
 ```
 
-#### Testing Queries:
+#### 🧪 Testing Queries:
 
 ```sql
 -- Successful attempt: Inserting a row for a matching TenantId
@@ -209,7 +215,7 @@ WHERE Id = 1;
 
 ```
 
-#### Listing Security Policies
+#### 📜 Listing Security Policies
 
 In order to list the security policies in a data base run:
 
@@ -238,7 +244,7 @@ FROM
     JOIN sys.tables st ON spd.target_object_id = st.object_id;
 ```
 
-## Final SQL Solution
+## ⚗️Final SQL Solution
 
 Here is the final SQL code required to add Row-level Security to a SQL database:
 
@@ -261,11 +267,11 @@ GO
 EXEC sp_set_session_context @key = N'tenantId', @value = '1'; -- NOTE: The key is case sensitive
 ```
 
-## Conclusion
+## 🎯 Conclusion
 
 SQL Server's `CREATE SECURITY POLICY` feature offers a powerful way to enforce tenant-level security within your multi-tenant applications. By leveraging Row-level security, you can ensure that each tenant's data is isolated and secure, reducing the risk of unauthorized access and data breaches.
 With the detailed steps provided in this blog, you can confidently apply tenant-level security in your database, ensuring that your multi-tenant application remains secure, efficient, and compliant with industry standards regardless of the way the data is accessed.
 
-## STILL TO COME:
+## 🔜 STILL TO COME:
 
 Look out for an upcoming blog where I will detail how to set the session context from within C# and how connection pools are affected?

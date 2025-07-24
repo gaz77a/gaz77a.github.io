@@ -1,30 +1,32 @@
 ---
 layout: post
-title: 'How Much Faster? Real-World Timings When Raising SQL Server Database Compatibility Levels'
+title: '⏱️⚡ How Much Faster? Real-World Timings When Raising SQL Server Database Compatibility Levels ⚡⏱️'
 date: 2025-07-03 21:52:30 +1000
 categories: SQL Compatibility
 tags: SQL Server, Performance, Compatibility Level
 ---
 
-<img src="/assets/images/sql-compatibility/title.png" alt="My Blog Title" style="display:block; margin:0 auto; max-width:100%;" />
+![Title image](/assets/images/sql-compatibility/title.png)
 
-Upgrading your SQL Server’s database compatibility level is one of the easiest ways to get the latest performance benefits — **without changing a single line of application code**. But what actual improvements can you expect when raising a database’s compatibility level from SQL Server 2014 (level 120) up through 2016, 2017, 2019, and 2022? Are there measurable performance wins, and do you need to be careful? Let’s dive in with worked examples and lessons learned.
-
----
+> By Gary Butler | 5 min read
 
 <br><br>
 
-## Why Does Compatibility Level Matter?
+## 🚩 Introduction
+
+Upgrading your SQL Server’s database compatibility level is one of the easiest ways to get the latest performance benefits — **without changing a single line of application code**. But what actual improvements can you expect when raising a database’s compatibility level from SQL Server 2014 (level 120) up through 2016, 2017, 2019, and 2022? Are there measurable performance wins, and do you need to be careful? Let’s dive in with worked examples and lessons learned.
+
+<br><br>
+
+## 📈 Why Does Compatibility Level Matter?
 
 The SQL Server `compatibility level` setting lets a database behave like it’s running on an older version of SQL Server by maintaining legacy query processing, optimization, and T-SQL language rules. When you increase the compatibility level, your queries can take advantage of newer performance enhancements, smarter query processing, and additional security features provided in recent SQL Server versions (stay tuned for a blog on this topic).
 
 When you upgrade SQL Server, the compatibility level for existing databases does not change automatically — it remains set to its previous value unless you update it manually.
 
----
-
 <br><br>
 
-## Worked Example: Query Timings Across Compatibility Levels
+## ⏱️ Worked Example: Query Timings Across Compatibility Levels
 
 Let’s set the stage:
 
@@ -64,32 +66,26 @@ ORDER BY
 OPTION (RECOMPILE);
 ```
 
----
-
 <br><br>
 
-### Query Summary
+### 📋 Query Summary
 
 For each customer, the query calculates the average invoice line’s extended price (`AvgInvoiceAmountForCustomer`). This is done using the window function `AVG(Sales.InvoiceLines.ExtendedPrice) OVER (PARTITION BY Sales.Customers.CustomerID).`
 
 In particular, for every row, the value shown is the average of all invoice line extended prices for that specific customer, regardless of the invoice or item.
 
----
-
 <br><br>
 
-### Methodology
+### 🛠️ Methodology
 
 -   Time measured in milliseconds (ms) using `SET STATISTICS TIME ON`.
 -   Run each test 10 times and calculate the median and standard deviation.
 -   Compatibility levels: 120 (2014), 130 (2016), 140 (2017), 150 (2019), 160 (2022).
 -   Recompile option used to ensure consistency between runs
 
----
-
 <br><br>
 
-### Results Table
+### 📊 Results Table
 
 | Compatibility Level | SQL Version Emulated | Median Elapsed Time (ms) | % Improvement over 2014 | Standard Deviation | Notes                                                            |
 | ------------------- | -------------------- | ------------------------ | ----------------------- | ------------------ | ---------------------------------------------------------------- |
@@ -98,33 +94,27 @@ In particular, for every row, the value shown is the average of all invoice line
 | 140                 | 2017                 | 1320                     | 45.5%                   | 98                 | Adaptive query processing                                        |
 | 150                 | 2019                 | 1302                     | 46.3%                   | 95                 | IQP enhancements; parameter sensitive plan, adaptive parallelism |
 
----
-
 <br><br>
 
-## What Features Unlock These Improvements?
+## 🗝️ What Features Unlock These Improvements?
 
 -   **Batch Mode Execution** (compatibility 130+): Improved analytic query speed.
 -   **Adaptive Query Processing** (140+): Plans can fix themselves on the fly.
 -   **Intelligent Query Processing** (150+): Table variable deferred compilation, batch mode on rowstore, scalar UDF inlining—often double-digit percent gains in real workloads.
 -   **Parameter Sensitive Plan optimization** (160): Reduces “parameter sniffing” performance issues.
 
----
-
 <br><br>
 
-## Caution: Improvements May Vary
+## ⚠️ Caution: Improvements May Vary
 
 A counterexample: One customer’s complex reporting query actually slowed down under compatibility level 150 — because the new optimizer chose what it thought was a more efficient plan, which wasn’t true for that specific data distribution.
 
 **Tip:**
 Always test your actual workload. Use SQL Server Query Store (enabled by default since SQL Server 2016) to compare baseline and post-change performance.
 
----
-
 <br><br>
 
-## Step-by-Step: Measuring in Your Own Environment
+## 🪜 Step-by-Step: Measuring in Your Own Environment
 
 1. Set up Query Store for before/after comparison:
 
@@ -149,26 +139,22 @@ Always test your actual workload. Use SQL Server Query Store (enabled by default
 1. Check Plan Regression with Query Store
    Query Store’s “regressed queries” report highlights any slowdowns.
 
----
-
 <br><br>
 
-## Final Thoughts — Unlocking Performance, Responsibly
+## 🤔 Final Thoughts — Unlocking Performance, Responsibly
 
 **In the right workload, raising database compatibility level can yield query time reductions from 10% to 60%** — often simply by enabling smarter plan choice without any code changes. However, some queries may regress or behave differently, especially if they relied on quirks of older optimizers or cardinality estimators.
 
-### Key Takeaways:
+### 🥡 Key Takeaways:
 
 -   **Most workloads see a performance boost**, especially for analytical, reporting, and ad hoc queries as you move from 2014 to 2019 and 2022 compatibility.
--   **The magnitude of improvement varies**. My example query showed a reduction from 2,423 ms to 1,261 ms — a 48% improvement — but YOUR mileage may differ. Expect anywhere from modest gains to dramatic wins, particularly if your queries were previously bottlenecked by older query optimizations.
+-   **The magnitude of improvement varies**. My example query showed a reduction from 2,423 ms to 1,261 ms — a 48% improve ment — but YOUR mileage may differ. Expect anywhere from modest gains to dramatic wins, particularly if your queries were previously bottlenecked by older query optimizations.
 -   **Some regression risk exists**. Always test and validate against your own business-critical queries. Use Query Store to monitor for regressions, and be prepared to tune problematic queries or revisit compatibility if needed.
 -   **New features become available** as you raise the level: native string splitting, temporal tables, adaptive joins, approximate count distinct, scalar UDF inlining, and more.
 
----
-
 <br><br>
 
-## Additional Worked Example: Scalar UDF Inlining
+## 🧩 Additional Worked Example: Scalar UDF Inlining
 
 Suppose you have a table-valued function in use within a frequently run query:
 
@@ -204,11 +190,9 @@ The function can be "inlined" directly into the query by the optimizer, transfor
 | 140                 | 2017                 | 2,704                | N/A           |
 | 150                 | 2019                 | 77                   | 97%           |
 
----
-
 <br><br>
 
-## How To Safely Upgrade
+## 🛡️ How To Safely Upgrade
 
 1. **Benchmark Before and After:**
    Capture baseline timings and execution plans using SET STATISTICS TIME ON, Query Store or third-party monitoring tools.
@@ -219,17 +203,15 @@ The function can be "inlined" directly into the query by the optimizer, transfor
 1. **Update Statistics:**
    Always ensure statistics are up to date before and after upgrading. Newer compatibility levels can rely even more heavily on accurate statistics.
 
----
-
 <br><br>
 
-## Conclusion
+## 🎯 Conclusion
 
 **Raising the SQL Server compatibility level is a high-impact, low-effort way to unlock substantial performance improvements and new features**, as long as you test thoroughly and monitor for regressions. Time investments spent benchmarking and validating will pay off in smoother upgrades, happier users, and the ability to take advantage of SQL Server's continuous advancements.
 
----
-
 <br><br>
 
--   What’s your experience been with upgrading database compatibility levels?
--   Did you see similar speedups, or hit any bumps in the road?
+```
+💬 What’s your experience been with upgrading database compatibility levels?
+💬 Did you see similar speedups, or hit any bumps in the road?
+```
