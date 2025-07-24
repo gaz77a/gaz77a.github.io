@@ -68,27 +68,49 @@ permalink: /about/
     <span style="color:#758080; font-size:0.98em;">(Yes, technically, my beard is now a veteran astronaut.)</span>
   </div>
 
-  <!-- Wide Banner Photo (bottom, responsive) -->
-  <div style="width: 100%; margin-top: 18px; text-align: center;">
-    <img
-      src="/assets/images/about/sky-muster-2.png"
-      alt="My face aboard a rocket nose cone"
-      style="
-        width: 96%;
-        max-width: 540px;
-        height: auto;
-        aspect-ratio: 16/6;
-        object-fit: cover;
-        border-radius: 12px;
-        border: 1.5px solid #bbefff;
-        box-shadow: 0 2px 8px #d1eefc;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-      "
-    />
-    <div style="font-size:0.87em; color:#63a4cf; margin:6px 0 0 0;">
-      Nose cone collage shot
+  <!-- Side-by-side Images, bottom row, matching heights -->
+  <div style="width: 100%; margin-top: 18px; display: flex; gap: 16px; justify-content: center; align-items: flex-start; flex-wrap: wrap; text-align: center;">
+    <!-- Left image -->
+    <div>
+      <img
+        src="/assets/images/about/sky-muster-2.png"
+        alt="My face aboard a rocket nose cone"
+        style="
+          height: 120px;          /* Set the height */
+          width: auto;            /* Let width adjust as needed */
+          object-fit: cover;
+          border-radius: 12px;
+          border: 1.5px solid #bbefff;
+          box-shadow: 0 2px 8px #d1eefc;
+          display: block;
+          margin: 0 auto;
+          max-width: 100%;
+        "
+      />
+      <div style="font-size:0.87em; color:#63a4cf; margin:6px 0 0 0;">
+        Nose cone collage shot
+      </div>
+    </div>
+    <!-- Right image -->
+    <div>
+      <img
+        src="/assets/images/about/blast-off.png"
+        alt="Rocket blast-off"
+        style="
+          height: 120px;          /* Match height to left */
+          width: auto;            /* Whatever width required to maintain aspect */
+          object-fit: cover;
+          border-radius: 12px;
+          border: 1.5px solid #bbefff;
+          box-shadow: 0 2px 8px #d1eefc;
+          display: block;
+          margin: 0 auto;
+          max-width: 100%;
+        "
+      />
+      <div style="font-size:0.87em; color:#63a4cf; margin:6px 0 0 0;">
+        Rocket blast-off
+      </div>
     </div>
   </div>
 
