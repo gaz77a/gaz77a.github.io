@@ -7,7 +7,39 @@ categories: Tenant-Level Security
 tags: SQL Server, Security, Multi-Tenant Applications
 ---
 
-![Title image](/assets/images/tenant-level-security/title.png)
+<div style="
+  max-width: 1100px;
+  width: 100%;
+  margin: 42px auto 44px auto;
+  border-radius: 28px;
+  box-shadow:
+    0 20px 80px -4px rgba(44,60,180,0.72),             /* bold shadow */
+    0 28px 128px 0 rgba(44,50,100,0.19);               /* halo */
+  overflow: visible;        /* shadow spills out, not clipped */
+  background: none;
+  position: relative;
+  display: block;
+">
+  <div style="
+    border-radius: 28px;
+    overflow: hidden;       /* ensures image corners are rounded */
+    width: 100%;
+    height: 136px;          /* Flat banner */
+  ">
+    <img
+      src="/assets/images/tenant-level-security/title.png"
+      alt="Title image"
+      style="
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background: #dde8fc;
+        border: 0;
+      "
+    />
+  </div>
+</div>
 
 > By Gary Butler | 5 min read
 
