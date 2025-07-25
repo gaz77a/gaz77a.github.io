@@ -26,12 +26,21 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://gaz77a.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: jekyllrb
 github_username:  gaz77a
+linkedin_username: gary-butler-23001923
 author: Gary Butler
+show_excerpts: true
 
 # Build settings
 theme: minima
 plugins:
   - jekyll-feed
+
+# Minima date format
+# refer to http://shopify.github.io/liquid/filters/date/ if you want to customize this
+minima:
+  date_format: "%-d %b %Y"
+  list_title: "Blog Posts"
+
 
 # Exclude from processing.
 # The following items will not be processed, by default.
