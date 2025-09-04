@@ -1,0 +1,8 @@
+<div class="fancy-container">
+    <div class="fancy-image-wrapper">
+        <img src="{{ include.image_url }}" alt="{{ include.alt }}" class="fancy-image" />
+    </div>
+    {% if include.caption %}
+    <div class="fancy-image-caption">{{ include.caption }}</div>
+    {% endif %}
+</div>

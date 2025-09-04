@@ -28,3 +28,34 @@
     background: #dde8fc;
     border: 0;
 }
+
+.fancy-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    /* Transparent to avoid white/black peeking through */
+    border-radius: 16px;
+    /* Optional, for look—but only the image needs it */
+}
+
+/* Regular image style for rounded corners */
+.fancy-image {
+    border-radius: 16px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    background: #dde8fc;
+    /* Soft color for PNG transparency, matches banners, or use transparent if you prefer */
+    margin: 0 auto;
+    border: 0;
+}
+
+/* Caption styles */
+.fancy-image-caption {
+    margin-top: 0.6em;
+    font-size: 1em;
+    color: #5a5a5a;
+    text-align: center;
+    /* Ensure no border-radius, overflow, or position/absolute */
+}
