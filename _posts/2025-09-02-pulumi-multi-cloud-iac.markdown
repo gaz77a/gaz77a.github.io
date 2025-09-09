@@ -1,6 +1,6 @@
 ---
 layout: post
-title: '🧹 Seamless Multi-Cloud IaC with Pulumi: Swappable AWS and Azure Storage in C# 🧹'
+title: '💻 Seamless Multi-Cloud IaC with Pulumi: Swappable AWS and Azure Storage in C# 💻'
 date: 2025-09-02 21:52:30 +1000
 categories: Software Development
 tags: pulumi, csharp, multicloud, infrastructure-as-code, aws, azure
